@@ -1,6 +1,6 @@
 // Lufia 2 - Ancient Cave Autosplitter by Traviktox
 
-// Feedback or bug report:
+// Feedback, bug report or suggestions:
 // Discord: Traviktox#5818 
 // twitch.tv/traviktox
 
@@ -22,7 +22,7 @@ startup
     settings.SetToolTip("EveryFloor", "Split on every floor");
     settings.Add("Every10th", false, "Every 10th floor", "Floors");
     settings.SetToolTip("Every10th", "Split every 10th floor");
-    settings.Add("98th", false, "98th floor", "Floors");
+    settings.Add("98th", false, "98th floor", "Every10th");
     settings.SetToolTip("98th", "Splits, when you enter the blob room");
     settings.Add("Blobkill", true, "Blobkill");
     settings.SetToolTip("Blobkill", "Split at blobkill");
