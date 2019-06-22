@@ -22,6 +22,8 @@ startup
     settings.SetToolTip("EveryFloor", "Split on every floor");
     settings.Add("Every10th", false, "Every 10th floor", "Floors");
     settings.SetToolTip("Every10th", "Split every 10th floor");
+    settings.Add("1st", false, "1st floor", "Floors");
+    settings.SetToolTip("1st", "Splits, when you enter the ancient cave");
     settings.Add("98th", false, "98th floor", "Every10th");
     settings.SetToolTip("98th", "Splits, when you enter the blob room");
     settings.Add("Blobkill", true, "Blobkill");
@@ -98,9 +100,10 @@ reset
 
 split
 {
-    var nextfloor = settings["EveryFloor"] && vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current;
-    var tenfloor = settings["Every10th"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && (((vars.watchers["floor"].Current - 1) % 10) == 0);
+    var nextfloor = settings["EveryFloor"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current !=1;
+    var tenfloor = settings["Every10th"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && (((vars.watchers["floor"].Current - 1) % 10) == 0) && vars.watchers["floor"].Current !=1;
+    var first = settings["1st"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current ==1;
     var nineeight = settings["98th"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current == 99;
     var blobkill = settings["Blobkill"] && vars.watchers["blob"].Current == 31 && vars.watchers["blob"].Old == 00 && vars.watchers["floor"].Current == 99;
-    return nextfloor || blobkill || tenfloor || nineeight;
+    return nextfloor || blobkill || tenfloor || nineeight || first;
 }
