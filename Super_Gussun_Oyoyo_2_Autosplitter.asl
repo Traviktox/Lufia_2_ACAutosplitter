@@ -15,7 +15,7 @@ state("emuhawk") {}
 startup
 {
     settings.Add("level", true);
-    settings.SetToolTip("level", "Split on every Level");
+    settings.SetToolTip("level", "Split after every Level");
 }
 
 init
@@ -66,6 +66,8 @@ init
     vars.watchers = new MemoryWatcherList
     {
  	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x00E2) { Name = "lvlcounter" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x02EF) { Name = "lvl_status1" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x02AF) { Name = "lvl_status2" },
     };
 }
 
@@ -87,5 +89,6 @@ reset
 split
 {
     var ende = settings["level"] && vars.watchers["lvlcounter"].Old + 1 == vars.watchers["lvlcounter"].Current;
-    return ende;
+    var finish = settings["level"] && vars.watchers["lvlcounter"].Current == 40 && vars.watchers["lvl_status1"].Old == 4 && vars.watchers["lvl_status2"].Old == 4 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lvl_status1"].Current == 0;
+    return ende | finish;
 }
