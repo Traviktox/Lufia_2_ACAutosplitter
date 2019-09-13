@@ -14,8 +14,12 @@ state("emuhawk") {}
 
 startup
 {
-    settings.Add("level", true);
-    settings.SetToolTip("level", "Split after every Level");
+    settings.Add("Every level", true);
+    settings.SetToolTip("Every level", "Split after every Level");
+    settings.Add("End at stage 32 (any%)", true);
+    settings.SetToolTip("End at stage 32 (any%)", "Last split is at stage 32");
+    settings.Add("End at stage 40 (all stages%)", false);
+    settings.SetToolTip("End at stage 40 (all stages%)", "Last split is at stage 40");
 }
 
 init
@@ -88,7 +92,8 @@ reset
 
 split
 {
-    var ende = settings["level"] && vars.watchers["lvlcounter"].Old + 1 == vars.watchers["lvlcounter"].Current;
-    var finish = settings["level"] && vars.watchers["lvlcounter"].Current == 40 && vars.watchers["lvl_status1"].Old == 4 && vars.watchers["lvl_status2"].Old == 4 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lvl_status1"].Current == 0;
-    return ende | finish;
+    var ende = settings["Every level"] && vars.watchers["lvlcounter"].Old + 1 == vars.watchers["lvlcounter"].Current;
+    var finish32 = settings["End at stage 32 (any%)"] && vars.watchers["lvlcounter"].Current == 32 && vars.watchers["lvl_status1"].Old == 4 && vars.watchers["lvl_status2"].Old == 4 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lvl_status1"].Current == 0;
+    var finish40 = settings["End at stage 40 (all stages%)"] && vars.watchers["lvlcounter"].Current == 40 && vars.watchers["lvl_status1"].Old == 4 && vars.watchers["lvl_status2"].Old == 4 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lvl_status1"].Current == 0;
+    return ende | finish32 | finish40;
 }
