@@ -80,6 +80,7 @@ init
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0370) { Name = "musicTrack" },
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B75) { Name = "floor" },
         new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x421d) { Name = "blob" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x11E8) { Name = "round_counter" },
     };
 }
 
@@ -104,6 +105,6 @@ split
     var tenfloor = settings["Every10th"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && (((vars.watchers["floor"].Current - 1) % 10) == 0) && vars.watchers["floor"].Current !=1;
     var first = settings["1st"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current ==1;
     var nineeight = settings["98th"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current == 99;
-    var blobkill = settings["Blobkill"] && vars.watchers["blob"].Current == 31 && vars.watchers["blob"].Old == 00 && vars.watchers["floor"].Current == 99;
+    var blobkill = settings["Blobkill"] && vars.watchers["blob"].Current == 31 && vars.watchers["blob"].Old == 00 && vars.watchers["floor"].Current == 99 && vars.watchers["round_counter"].Current != 4;
     return nextfloor || blobkill || tenfloor || nineeight || first;
 }
