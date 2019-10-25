@@ -105,6 +105,6 @@ split
     var tenfloor = settings["Every10th"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && (((vars.watchers["floor"].Current - 1) % 10) == 0) && vars.watchers["floor"].Current !=1;
     var first = settings["1st"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current ==1;
     var nineeight = settings["98th"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current == 99;
-    var blobkill = settings["Blobkill"] && vars.watchers["blob"].Current == 31 && vars.watchers["blob"].Old == 00 && vars.watchers["floor"].Current == 99 && vars.watchers["round_counter"].Current != 4;
+    var blobkill = settings["Blobkill"] && vars.watchers["blob"].Current == 31 && vars.watchers["blob"].Old == 00 && vars.watchers["floor"].Current == 99 && (vars.watchers["round_counter"].Current == 1 || vars.watchers["round_counter"].Current == 2 || vars.watchers["round_counter"].Current == 3);
     return nextfloor || blobkill || tenfloor || nineeight || first;
 }
