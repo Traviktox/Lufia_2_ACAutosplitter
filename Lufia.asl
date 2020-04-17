@@ -28,6 +28,8 @@ startup
     settings.SetToolTip("98th", "Splits, when you enter the blob room");
     settings.Add("Blobkill", true, "Blobkill");
     settings.SetToolTip("Blobkill", "Split at blobkill");
+    
+    vars.frameRate = 60.0;
 }
 
 init
@@ -81,6 +83,10 @@ init
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B75) { Name = "floor" },
         new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x421d) { Name = "blob" },
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x11E8) { Name = "round_counter" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B50) { Name = "igtFrames" },
+    	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4F) { Name = "igtSeconds" },
+    	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4E) { Name = "igtMinutes" },
+    	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4D) { Name = "igtHours" },
     };
 }
 
@@ -107,4 +113,28 @@ split
     var nineeight = settings["98th"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current == 99;
     var blobkill = settings["Blobkill"] && vars.watchers["blob"].Current == 31 && vars.watchers["blob"].Old == 00 && vars.watchers["floor"].Current == 99 && (vars.watchers["round_counter"].Current == 1 || vars.watchers["round_counter"].Current == 2 || vars.watchers["round_counter"].Current == 3);
     return nextfloor || blobkill || tenfloor || nineeight || first;
+}
+
+gameTime
+{
+    var frames  = vars.watchers["igtFrames"].Current;
+    var seconds = vars.watchers["igtSeconds"].Current;
+    var minutes = vars.watchers["igtMinutes"].Current;
+    var hours   = vars.watchers["igtHours"].Current;
+
+    if(frames == 0 && vars.watchers["igtFrames"].Old == 49){
+        vars.frameRate = 50.0;
+    }
+
+    current.totalTime = (frames / vars.frameRate) + seconds + (60 * minutes) + (60 * 60 * hours);
+    return TimeSpan.FromSeconds(current.totalTime);
+}
+
+isLoading
+{
+    // From the AutoSplit documentation:
+    // "If you want the Game Time to not run in between the synchronization interval and only ever return
+    // the actual Game Time of the game, make sure to implement isLoading with a constant
+    // return value of true."
+    return true;
 }
