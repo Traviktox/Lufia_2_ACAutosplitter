@@ -67,8 +67,6 @@ init
 
     vars.watchers = new MemoryWatcherList
     {
-		new MemoryWatcher<ushort>((IntPtr)memoryOffset + 0x18B5) { Name = "fadeout1" },
-		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x18B6) { Name = "fadeout2" },
 		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0097) { Name = "musicTrack" },
 		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x00F2) { Name = "finish" },
     };
