@@ -69,9 +69,10 @@ init
 
     vars.watchers = new MemoryWatcherList
     {
- 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x00E2) { Name = "lvlcounter" },
-	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x02EF) { Name = "lvl_status1" },
-	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x02AF) { Name = "lvl_status2" },
+		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x00E2) { Name = "lvlcounter" },
+		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x02EF) { Name = "lvl_status1" },
+		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x02AF) { Name = "lvl_status2" },
+		new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x00F2) { Name = "lives" },
     };
 }
 
@@ -92,8 +93,19 @@ reset
 
 split
 {
-    var ende = settings["Every level"] && vars.watchers["lvlcounter"].Old + 1 == vars.watchers["lvlcounter"].Current;
-    var finish32 = settings["End at stage 32 (any%)"] && vars.watchers["lvlcounter"].Current == 32 && vars.watchers["lvl_status1"].Old == 4 && vars.watchers["lvl_status2"].Old == 4 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lvl_status1"].Current == 0;
-    var finish40 = settings["End at stage 40 (all stages%)"] && vars.watchers["lvlcounter"].Current == 40 && vars.watchers["lvl_status1"].Old == 4 && vars.watchers["lvl_status2"].Old == 4 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lvl_status1"].Current == 0;
-    return ende | finish32 | finish40;
+	if (settings["Every level"] && vars.watchers["lvlcounter"].Old + 1 == vars.watchers["lvlcounter"].Current){
+		return true;
+	}
+	if (vars.watchers["lvlcounter"].Current == 32 && vars.watchers["lvl_status1"].Old == 0 && vars.watchers["lvl_status2"].Old == 0 && vars.watchers["lvl_status1"].Current == 8 && vars.watchers["lvl_status1"].Current == 8){
+		vars.current_lives = vars.watchers["lives"].Current;
+	}
+	if (vars.watchers["lvlcounter"].Current == 40 && vars.watchers["lvl_status1"].Old == 0 && vars.watchers["lvl_status2"].Old == 0 && vars.watchers["lvl_status1"].Current == 4 && vars.watchers["lvl_status1"].Current == 4){
+		vars.current_lives = vars.watchers["lives"].Current;
+	}
+	if (settings["End at stage 32 (any%)"] && vars.watchers["lvlcounter"].Current == 32 && vars.watchers["lvl_status1"].Old == 8 && vars.watchers["lvl_status2"].Old == 8 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lives"].Current == vars.current_lives){
+		return true;
+	}
+	if (settings["End at stage 40 (all stages%)"] && vars.watchers["lvlcounter"].Current == 40 && vars.watchers["lvl_status1"].Old == 4 && vars.watchers["lvl_status2"].Old == 4 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lvl_status1"].Current == 0 && vars.watchers["lives"].Current == vars.current_lives){
+		return true;
+	}
 }
