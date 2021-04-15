@@ -100,6 +100,11 @@ start
     return vars.watchers["musicTrack"].Old == 85 && vars.watchers["musicTrack"].Current == 115;
 }
 
+reset
+{
+    return vars.watchers["floor"].Old != 0 && vars.watchers["floor"].Current == 0;
+}
+
 split
 {
     var nextfloor = settings["EveryFloor"] && (vars.watchers["floor"].Old + 1 == vars.watchers["floor"].Current) && vars.watchers["floor"].Current !=1;
