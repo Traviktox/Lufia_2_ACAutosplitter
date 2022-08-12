@@ -7,8 +7,6 @@
 // Basic format of the script is based on:
 // https://github.com/Spiraster/ASLScripts/tree/master/LiveSplit.SMW
 
-// Delay from the start of the autosplitter 0.83 sec
-
 state("higan") {}
 state("snes9x") {}
 state("snes9x-x64") {}
@@ -28,8 +26,8 @@ startup
     settings.SetToolTip("98th", "Splits, when you enter the blob room");
     settings.Add("Blobkill", true, "Blobkill");
     settings.SetToolTip("Blobkill", "Split at blobkill");
-    
-    vars.frameRate = 60.0;
+	
+	vars.frameRate = 60.0;
 }
 
 init
@@ -55,6 +53,8 @@ init
         { 9060352, 0x1405AE848 },   //snes9x 1.58 (x64)
         { 8953856, 0x975A54 },      //snes9x 1.59.2
         { 12537856, 0x1408D86F8 },  //snes9x 1.59.2 (x64)
+		{ 9646080, 0x97EE04 },		//Snes9x-rr 1.60
+		{ 13565952, 0x140925118 },	//Snes9x-rr 1.60 (x64)
         { 9027584, 0x94DB54 },      //snes9x 1.60
         { 12836864, 0x1408D8BE8 },  //snes9x 1.60 (x64)
         { 12509184, 0x915304 },     //higan v102
@@ -62,11 +62,19 @@ init
         { 15859712, 0x952144 },     //higan v104
         { 16756736, 0x94F144 },     //higan v105tr1
         { 16019456, 0x94D144 },     //higan v106
+		{ 15360000, 0x8AB144 },     //higan v106.112
         { 10096640, 0x72BECC },     //bsnes v107
         { 10338304, 0x762F2C },     //bsnes v107.1
         { 47230976, 0x765F2C },     //bsnes v107.2/107.3
+		{ 142282752, 0xA65464 },	//bsnes v108
+		{ 131354624, 0xA6ED5C },	//bsnes v109
+		{ 131543040, 0xA9BD5C },	//bsnes v110
+		{ 51924992, 0xA9DD5C },		//bsnes v111
+		{ 52056064, 0xAAED7C }, 	//bsnes v112
+		{ 9662464, 0x67dac8 },		//bsnes+ 0.5
         { 7061504, 0x36F11500240 }, //BizHawk 2.3
         { 7249920, 0x36F11500240 }, //BizHawk 2.3.1
+		{ 6938624, 0x36F11500240 }, //BizHawk 2.3.2
     };
 
     long memoryOffset;
@@ -81,12 +89,16 @@ init
     {
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0370) { Name = "musicTrack" },
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B75) { Name = "floor" },
-        new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x421d) { Name = "blob" },
+    new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x421d) { Name = "blob" },
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x11E8) { Name = "round_counter" },
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B50) { Name = "igtFrames" },
-    	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4F) { Name = "igtSeconds" },
-    	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4E) { Name = "igtMinutes" },
-    	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4D) { Name = "igtHours" },
+    new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4F) { Name = "igtSeconds" },
+    new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4E) { Name = "igtMinutes" },
+    new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0B4D) { Name = "igtHours" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0054) { Name = "menu1" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x005A) { Name = "menu2" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x14AC) { Name = "fadeout" },
+
     };
 }
 
@@ -97,7 +109,7 @@ update
 
 start
 {
-    return vars.watchers["musicTrack"].Old == 85 && vars.watchers["musicTrack"].Current == 115;
+    return (vars.watchers["menu1"].Current == 2 && vars.watchers["menu2"].Current == 4 && vars.watchers["fadeout"].Old == 0 && vars.watchers["fadeout"].Current == 16);
 }
 
 reset
