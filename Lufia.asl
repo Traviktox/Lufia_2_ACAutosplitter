@@ -105,6 +105,8 @@ init
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0054) { Name = "menu1" },
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x005A) { Name = "menu2" },
 	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x14AC) { Name = "fadeout" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0573) { Name = "screen1" },
+	new MemoryWatcher<byte>((IntPtr)memoryOffset + 0x0574) { Name = "screen2" },
 
     };
 }
@@ -116,7 +118,7 @@ update
 
 start
 {
-    return (vars.watchers["menu1"].Current == 2 && vars.watchers["menu2"].Current == 4 && vars.watchers["fadeout"].Old == 0 && vars.watchers["fadeout"].Current == 16);
+    return (vars.watchers["menu1"].Current == 2 && vars.watchers["menu2"].Current == 4 && vars.watchers["screen1"].Current == 140 && vars.watchers["screen2"].Current == 53 && vars.watchers["fadeout"].Old == 0 && vars.watchers["fadeout"].Current == 16);
 }
 
 reset
