@@ -7,10 +7,13 @@
 // Basic format of the script is based on:
 // https://github.com/Spiraster/ASLScripts/tree/master/LiveSplit.SMW
 
-state("higan") {}
-state("snes9x") {}
-state("snes9x-x64") {}
-state("emuhawk") {}
+state("higan"){}
+state("bsnes"){}
+state("snes9x"){}
+state("snes9x-x64"){}
+state("emuhawk"){}
+state("retroarch"){}
+state("lsnes-bsnes"){}
 
 startup
 {
